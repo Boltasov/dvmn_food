@@ -129,11 +129,11 @@ class DishIngredient(models.Model):
         UNIT = 'UNIT', 'шт.'
         GRAM = 'GR', 'г.'
         TASTE = 'TASTE', 'по вкусу'
-        GLASS = 'GLASS', 'стакан'
-        TBLS = 'TBLSP', 'ст. ложка'
-        TEASP = 'TSP', 'ч. ложка'
-        LEAF = 'LEAF', 'листик'
-        LITER = 'L', 'литр'
+        GLASS = 'GLASS', 'стак.'
+        TBLS = 'TBLSP', 'ст. л.'
+        TEASP = 'TSP', 'ч. л.'
+        LEAF = 'LEAF', 'лист.'
+        LITER = 'L', 'л.'
         ML = 'ML', 'мл.'
 
     dish = models.ForeignKey(
