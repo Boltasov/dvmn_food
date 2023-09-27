@@ -146,8 +146,12 @@ class DishIngredient(models.Model):
         verbose_name='Ингредиент',
         on_delete=models.CASCADE,
     )
-    amount = models.IntegerField(
+    amount = models.DecimalField(
         verbose_name='Количество',
+        max_digits=9,
+        decimal_places=2,
+        blank=True,
+        null=True,
     )
     measurement = models.CharField(
         verbose_name='Единица измерения',
