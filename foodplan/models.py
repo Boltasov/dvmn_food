@@ -21,6 +21,11 @@ class Meal(models.Model):
         max_length=40,
         verbose_name='Название'
     )
+    cost = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        verbose_name='Стоимость включения в меню',
+    )
 
     def __str__(self):
         return self.name
@@ -57,6 +62,10 @@ class MenuType(models.Model):
         max_length=40,
         verbose_name='Название'
     )
+    image = models.ImageField(
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.name
@@ -71,9 +80,8 @@ class Dish(models.Model):
         max_length=40,
         verbose_name='Название'
     )
-    menu_type = models.ForeignKey(
+    menu_type = models.ManyToManyField(
         MenuType,
-        on_delete=models.CASCADE,
         related_name='dishes',
         verbose_name='Тип меню (диета)',
     )
@@ -97,6 +105,12 @@ class Dish(models.Model):
         blank=True,
         verbose_name='Фото блюда',
     )
+    preparation = models.TextField(
+        verbose_name='Способ приготовления'
+    )
+    caloricity = models.IntegerField(
+        verbose_name='Калорийность',
+    )
     promo = models.BooleanField(
         default=False,
         verbose_name='Промо (бесплатный рецепт)'
@@ -111,6 +125,17 @@ class Dish(models.Model):
 
 
 class DishIngredient(models.Model):
+    class Measurement(models.TextChoices):
+        UNIT = 'UNIT', 'шт.'
+        GRAM = 'GR', 'г.'
+        TASTE = 'TASTE', 'по вкусу'
+        GLASS = 'GLASS', 'стакан'
+        TBLS = 'TBLSP', 'ст. ложка'
+        TEASP = 'TSP', 'ч. ложка'
+        LEAF = 'LEAF', 'листик'
+        LITER = 'L', 'литр'
+        ML = 'ML', 'мл.'
+
     dish = models.ForeignKey(
         Dish,
         verbose_name='Блюдо',
@@ -123,6 +148,12 @@ class DishIngredient(models.Model):
     )
     amount = models.IntegerField(
         verbose_name='Количество',
+    )
+    measurement = models.CharField(
+        verbose_name='Единица измерения',
+        max_length=9,
+        choices=Measurement.choices,
+        default=Measurement.TASTE,
     )
 
     def __str__(self):
@@ -229,3 +260,4 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+
