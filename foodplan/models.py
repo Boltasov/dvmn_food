@@ -205,7 +205,6 @@ class Subscription(models.Model):
     )
     allergies = models.ManyToManyField(
         Allergy,
-        null=True,
         blank=True,
         related_name='subscriptions',
         verbose_name='Аллергии',
