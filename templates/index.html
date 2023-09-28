@@ -5,6 +5,10 @@
 План питания на неделю, меню, рецепты, список покупок. Классическое меню, безуглеводное меню
 {% endblock title %}
 
+{% block header_btn %}
+  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
+{% endblock %}
+
 {% block content %}
 <main style="margin-top: calc(2rem + 85px);">
     <section class="foodplan__head_bg">
