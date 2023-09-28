@@ -55,6 +55,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Приём пищи'
         verbose_name_plural = 'Приёмы пищи'
+        ordering = ['name']
 
 
 class MenuType(models.Model):
@@ -135,6 +136,11 @@ class DishIngredient(models.Model):
         LEAF = 'LEAF', 'лист.'
         LITER = 'L', 'л.'
         ML = 'ML', 'мл.'
+        ROAST = 'ROAST', 'для обжарки'
+        SERVE = 'SERVE', 'для подачи'
+        SLICE = 'SLICE', 'ломтика'
+        DROPLET = 'DRP', 'капли'
+        CLOVE = 'CLOVE', 'зуб.'
 
     dish = models.ForeignKey(
         Dish,
@@ -156,6 +162,8 @@ class DishIngredient(models.Model):
     measurement = models.CharField(
         verbose_name='Единица измерения',
         max_length=9,
+        blank=True,
+        null=True,
         choices=Measurement.choices,
         default=Measurement.TASTE,
     )
