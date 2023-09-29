@@ -21,6 +21,11 @@ class Meal(models.Model):
         max_length=40,
         verbose_name='Название'
     )
+    cost = models.DecimalField(
+        max_digits=8,
+        decimal_places=2,
+        verbose_name='Стоимость включения в меню',
+    )
 
     def __str__(self):
         return self.name
@@ -50,12 +55,17 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = 'Приём пищи'
         verbose_name_plural = 'Приёмы пищи'
+        ordering = ['name']
 
 
 class MenuType(models.Model):
     name = models.CharField(
         max_length=40,
         verbose_name='Название'
+    )
+    image = models.ImageField(
+        blank=True,
+        null=True,
     )
 
     def __str__(self):
@@ -71,9 +81,8 @@ class Dish(models.Model):
         max_length=40,
         verbose_name='Название'
     )
-    menu_type = models.ForeignKey(
+    menu_type = models.ManyToManyField(
         MenuType,
-        on_delete=models.CASCADE,
         related_name='dishes',
         verbose_name='Тип меню (диета)',
     )
@@ -97,6 +106,12 @@ class Dish(models.Model):
         blank=True,
         verbose_name='Фото блюда',
     )
+    preparation = models.TextField(
+        verbose_name='Способ приготовления'
+    )
+    caloricity = models.IntegerField(
+        verbose_name='Калорийность',
+    )
     promo = models.BooleanField(
         default=False,
         verbose_name='Промо (бесплатный рецепт)'
@@ -111,6 +126,22 @@ class Dish(models.Model):
 
 
 class DishIngredient(models.Model):
+    class Measurement(models.TextChoices):
+        UNIT = 'UNIT', 'шт.'
+        GRAM = 'GR', 'г.'
+        TASTE = 'TASTE', 'по вкусу'
+        GLASS = 'GLASS', 'стак.'
+        TBLS = 'TBLSP', 'ст. л.'
+        TEASP = 'TSP', 'ч. л.'
+        LEAF = 'LEAF', 'лист.'
+        LITER = 'L', 'л.'
+        ML = 'ML', 'мл.'
+        ROAST = 'ROAST', 'для обжарки'
+        SERVE = 'SERVE', 'для подачи'
+        SLICE = 'SLICE', 'ломтика'
+        DROPLET = 'DRP', 'капли'
+        CLOVE = 'CLOVE', 'зуб.'
+
     dish = models.ForeignKey(
         Dish,
         verbose_name='Блюдо',
@@ -121,8 +152,20 @@ class DishIngredient(models.Model):
         verbose_name='Ингредиент',
         on_delete=models.CASCADE,
     )
-    amount = models.IntegerField(
+    amount = models.DecimalField(
         verbose_name='Количество',
+        max_digits=9,
+        decimal_places=2,
+        blank=True,
+        null=True,
+    )
+    measurement = models.CharField(
+        verbose_name='Единица измерения',
+        max_length=9,
+        blank=True,
+        null=True,
+        choices=Measurement.choices,
+        default=Measurement.TASTE,
     )
 
     def __str__(self):
@@ -229,3 +272,4 @@ class Subscription(models.Model):
     class Meta:
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
+

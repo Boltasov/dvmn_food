@@ -28,6 +28,11 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
+Загрузить начальные данные в базу:
+```commandline
+python manage.py loaddata recipes.json
+```
+
 Запуск
 ```commandline
 python manage.py runserver
