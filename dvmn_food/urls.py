@@ -10,4 +10,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('order/', views.order, name='order'),
+    path('confirmation/', views.order_confirmation, name='confirmation'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models.query import QuerySet
 
 
 class Allergy(models.Model):
@@ -53,8 +54,8 @@ class Ingredient(models.Model):
         return self.name
 
     class Meta:
-        verbose_name = 'Приём пищи'
-        verbose_name_plural = 'Приёмы пищи'
+        verbose_name = 'Ингридиент'
+        verbose_name_plural = 'Ингридиенты'
         ordering = ['name']
 
 
@@ -217,11 +218,17 @@ class PromoCode(models.Model):
         verbose_name_plural = 'Промокоды'
 
 
+class UnpaidSubscriptions(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(start_date=None)
+
+
 class Subscription(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
         verbose_name='Пользователь',
+        db_index=True,
     )
     menu_type = models.ForeignKey(
         MenuType,
@@ -234,9 +241,13 @@ class Subscription(models.Model):
     )
     start_date = models.DateField(
         verbose_name='Дата начала',
+        blank=True,
+        null=True,
     )
     end_date = models.DateField(
         verbose_name='Дата окончания',
+        blank=True,
+        null=True,
     )
     meals = models.ManyToManyField(
         Meal,
@@ -265,6 +276,9 @@ class Subscription(models.Model):
         related_name='subscriptions',
         verbose_name='Промокод',
     )
+
+    objects = models.Manager()
+    unpaid = UnpaidSubscriptions()
 
     def __str__(self):
         return f'{self.user} - {self.menu_type}'

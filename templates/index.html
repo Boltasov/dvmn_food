@@ -11,7 +11,7 @@
 
 {% block content %}
 <main style="margin-top: calc(2rem + 85px);">
-    <section class="foodplan__head_bg">
+    <section class="foodplan__head_bg" style="background-image: url({% static 'img/head-bg.png' %});">
         <div class="container">
             <div class="d-flex w-50 py-lg-5 foodplan__head">
                 <div class="d-flex flex-column justify-content-start foodplan__head_desc">
@@ -20,7 +20,7 @@
                         Вы получаете рецепты + список продуктов.<br>
                         Больше не нужно думать, что готовить.</h4>
                     <div class="d-block mt-3">
-                        <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Хочу попробовать</button>
+                        <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url "order" %}'">Хочу попробовать</button>
                     </div>
                 </div>
             </div>
