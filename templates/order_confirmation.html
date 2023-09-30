@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodplan 2023 - Подтверждение подписки{% endblock %}
+
+{% block header_btn %}
+  <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:logout' %}'">Выйти</button>
+{% endblock %}
+
+{% block content %}
+  <main style="margin-top: calc(2rem + 85px);">
+    <section class="foodplan__head_bg" style="background-image: url({% static 'img/head-bg.png' %});">
+      <div class="container">
+        <div class="d-flex w-50 py-lg-5 foodplan__head">
+            <div class="d-flex flex-column justify-content-start foodplan__head_desc">
+              <h1 class="mb-5"><b>Проверьте правильность заказа</b></h1>
+              {% if menu %}
+                <h4>Вы выбрали:</h4>
+                    <p class="text-secondary" align="left">
+                        Меню: {{ menu }}.<br>
+                        В течении {{ term }} мес.<br>
+                        Приемы пищи: {% for meal in meals %}{{ meal.name }} {% endfor %}<br>
+                        {% if allergies %}
+                        У Вас есть аллергия на: {% for allergy in allergies %}{{ allergy.name }} {% endfor %}<br>
+                        {% else %}
+                        У Вас нет аллергии.<br>
+                        {% endif %}
+                        <b>Стоимость: {{ cost }} р.</b>
+                    </p>
+                <div class="d-block mt-3">
+                    <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
+                </div>
+              {% else %}
+                <h5>Вы не выбрали предпочитаемый тип меню</h5>
+                <div class="d-block mt-3">
+                    <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'order' %}'">Назад</button>
+                </div>
+              {% endif %}
+            </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+{% endblock %}

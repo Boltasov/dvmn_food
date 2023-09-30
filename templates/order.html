@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+
+{% block title %}Foodplan 2023 - Меню на неделю FOODPLAN{% endblock %}
+
+{% block header_btn %}
+  
+  <h3 class="text-secondary mt-2 me-2" id="cost">{{ Cost }}</h3>
+  <script>
+    var term = order.term
+    function Cost(){
+        var cost = document.getElementById("cost");
+        var selectedOption = term.options[term.selectedIndex];
+        cost.textContent = "Стоимость: " + selectedOption.text;
+        return cost.textContent
+    }
+    term.addEventListener("change", Cost);
+  </script>
+  <button form="order" type="submit" class="btn shadow-none btn-sm btn-outline-success foodplan_green foodplan__border_green">Оплатить</button>
+{% endblock %}
+
+{% block content %}
+    <main style="margin-top: calc(2rem + 85px);">
+        <section>
+            <div class="container">
+                <h1><strong class="foodplan_green">1 шаг </strong>до первого меню</h1>
+                <h5 class="text-secondary mb-3">Вам будут доступны следующие типы меню:</h5>
+                <div class="row mb-5">
+                  {% for menu in menu_types %}
+                    <div class="col-6 col-md-3">
+                        
+                        <label for="{{ menu.pk }}" class="position-relative" style="cursor: pointer;">
+                            <h5 align="center">{{ menu.name }}</h5>
+                            <img src="{{ menu.image.url }}" alt="" class="w-100">
+                            <input form="order" type="radio" name="foodtype" id="{{ menu.pk }}" value="{{ menu.pk }}" class="foodplan_selected d-none">
+                            <div class="img_selected" id="img{{ menu.pk }}"></div>
+                        </label>
+                    </div>
+                  {% endfor %}
+                </div>
+                <h2><strong>Выберите подходящий тариф</strong></h2>
+                <form id="order" name="order" action="{% url "confirmation" %}">
+                  <table class="table text-center text-truncate mb-5">
+                    <tbody>
+                        <tr>
+                            <th scope="row" class="text-start">Срок</th>
+                            <td>
+                                <select  name="term" class="form-select">
+                                    <option value="1" selected>1 мес.</option>
+                                    <option value="3">3 мес.</option>
+                                    <option value="6">6 мес.</option>
+                                    <option value="12">12 мес.</option>
+                                </select>
+                            </td>
+                        </tr>
+                      {% for meal in meals %}
+                        <tr>
+                            <th scope="row" class="text-start">{{ meal.name }}</th>
+                            <td>
+                                <select name="meal{{ meal.pk }}" class="form-select">
+                                    <option value="{{ meal.pk }}" selected>&#10004;</option>
+                                    <option value="0">&#10008;</option>
+                                </select>
+                            </td>
+                        </tr>
+                      {% endfor %}
+                        <tr>
+                            <th scope="row" class="text-start">Кол-во персон</th>
+                            <td>
+                                <select name="persons_count" class="form-select">
+                                    <option value="1" selected>1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                    <option value="6">6</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="text-start">Аллергии</th>
+                            <td>
+                              {% for allergy in allergies %}
+                                <div class="form-check d-flex justify-content-start">
+                                    <input class="form-check-input me-1 foodplan_checked-green" type="checkbox" value="" name="allergy{{ allergy.pk }}">
+                                    <label class="form-check-label" for="allergy{{ allergy.pk }}">
+                                      {{ allergy.name }}
+                                    </label>
+                                </div>
+                              {% endfor %}
+                            </td>
+                        </tr>
+                    </tbody>
+                  </table>
+                  <button type="submit" id="TableSubmit" class="d-none"></button>
+                </form>
+
+                <form class="card d-flex flex-row align-items-baseline mb-5 p-3 foodplan__bg_grey">
+                    <label for="exampleInputPassword1" class="form-label me-2">Промокод</label>
+                    <input type="password" class="form-control me-2" id="password">
+                    <button type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green">Применить</button>
+                </form>
+                <div class="d-flex justify-content-center my-5">
+                    <button form="order" type="submit" class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green w-50">Оплатить</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+{% endblock %}
+
+{% include "footer.html" %}
+
