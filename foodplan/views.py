@@ -2,7 +2,7 @@ from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Model
 
-from .models import MenuType, Allergy, Meal, Subscription
+from .models import MenuType, Allergy, Meal, Subscription, Dish
 
 
 def calculate_cost(meals, term):
@@ -84,3 +84,12 @@ def order_confirmation(request):
         'cost': cost,
         'persons_count': persons_count,
     })
+
+def promo_card(request):
+    dish = Dish.objects.filter(promo=True).order_by('?').first()
+    dish_ingredients = dish.dishingredient_set.all()
+    context = {
+        'dish': dish,
+        'dish_ingredients': dish_ingredients,
+    }
+    return render(request, 'promo_card.html', context)
