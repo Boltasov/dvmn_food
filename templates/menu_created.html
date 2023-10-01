@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Foodplan 2023 - Меню на неделю FOODPLAN{% endblock %}
+
+{% block header_btn %}
+  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url "index" %}'">Назад</button>
+{% endblock %}
+
+{% block content %}
+  <main style="margin-top: calc(2rem + 85px);">
+    <section>
+        <div class="container">
+            <div class="card p-3 mb-5 foodplan__shadow">
+                <h3 class="text-center"><strong>Оплата прошла успешно</strong></h3>
+                <p class="text-center">Оформленно {{menu_type.name}} меню. Подробности в личном кабинете</p>
+                <div class="row">
+                    <div class="col-12 col-md-4 d-flex justify-content-center">
+                        <div class="card foodplan__card_borderless">
+                            <img src="{{menu_type.image.url}}" alt="">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
+                <div class="mb-3">
+                    <p class="mb-4 text-center"><strong> <a href="{% url "index" %}">перейти на главную страницу</a>.</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+  </main>
+{% endblock %}
