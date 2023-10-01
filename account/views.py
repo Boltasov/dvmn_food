@@ -15,7 +15,8 @@ def fetch_weekdays(user, subscr):
         user=user,
         date__gte=monday,
         date__lte=sunday
-        ).order_by('date').values('date')
+        ).order_by('date').values('date').distinct()
+    print(recomendations)
     for recomendation in recomendations:
         recomendation['day'] = week[datetime.datetime.weekday(recomendation['date'])]
     return recomendations
@@ -24,6 +25,7 @@ def fetch_weekdays(user, subscr):
 def profile_view(request):
     if request.user.is_authenticated == False:
         return redirect('account:login')
+    test = Subscription.active.all().values_list('user__pk')
     active_subscripts = Subscription.active.filter(user=request.user)
     menues = []
     for subscription in active_subscripts:

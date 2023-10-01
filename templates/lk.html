@@ -78,9 +78,9 @@
                                     <div class="col-2">
                                         <img src="img/circle1.png" alt="" class="w-100">
                                     </div>
-                                    <div class="col-10 col-md-10" style="padding-top: 60px;">
+                                    <div class="col-10 col-md-10">
                                       {% if not menues %}
-                                      <div class="col-md-12 col-lg-9">
+                                      <div class="col-md-12 col-lg-9"  style="padding-top: 60px;">
                                         <h6>Вы пока не подписаны ни на одно меню. Выбрать меню можно <a href="{% url "order" %}">здесь</a>.</h6>
                                       </div>
                                       {% endif %}
@@ -110,7 +110,7 @@
                                                     <small>Заканчивается: </small><small>{{ menu.end_date|date:"d.m.Y" }}</small>
                                                 </div>
                                             </div>
-                                            <div class="row" style="padding-top: 30px;">
+                                            <div class="row" style="padding-top: 30px; padding-bottom: 40px;">
                                               {% for day in menu.week %}
                                                 <div class="col-sm">
                                                   <a href="#">
