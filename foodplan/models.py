@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.query import QuerySet
@@ -63,6 +65,11 @@ class MenuType(models.Model):
     name = models.CharField(
         max_length=40,
         verbose_name='Название'
+    )
+    description = models.TextField(
+        verbose_name='Описание меню',
+        null=True,
+        blank=True,
     )
     image = models.ImageField(
         blank=True,
@@ -199,7 +206,7 @@ class Recommendation(models.Model):
     )
 
     def __str__(self):
-        return f'{self.user}: {self.dish}'
+        return f'{self.user} - {self.date}: {self.dish}'
 
     class Meta:
         verbose_name = 'Рекомендация'
@@ -227,6 +234,14 @@ class PromoCode(models.Model):
 class UnpaidSubscriptions(models.Manager):
     def get_queryset(self) -> QuerySet:
         return super().get_queryset().filter(start_date=None)
+
+
+class PaidSubscriptions(models.Manager):
+    def get_queryset(self) -> QuerySet:
+        return super().get_queryset().filter(
+            start_date__lte=datetime.date.today(),
+            end_date__gte=datetime.date.today()
+        )
 
 
 class Subscription(models.Model):
@@ -285,6 +300,7 @@ class Subscription(models.Model):
 
     objects = models.Manager()
     unpaid = UnpaidSubscriptions()
+    active = PaidSubscriptions()
 
     def __str__(self):
         return f'{self.user} - {self.menu_type}'

@@ -6,12 +6,16 @@
 {% endblock title %}
 
 {% block header_btn %}
-    {% if user.is_authenticated %}
-        <p>Привет, {{ user.username }}!</p>
-        <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:logout' %}'">Выйти</button>
-    {% else %}
+      {% if request.user.is_authenticated %}
+        <li class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
+            <p>Привет, {{ user.username }}!</p>
+          <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:profile' %}'">Личный кабинет</button>
+          <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:logout' %}'">Выйти</button>
+        </li>
+      {% else %}
         <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
-    {% endif %}
+      {% endif %}
+
 {% endblock %}
 
 {% block content %}

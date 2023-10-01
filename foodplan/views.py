@@ -73,6 +73,10 @@ def order_confirmation(request):
     order.peoples_amount = persons_count
     order.price = cost
     order.save()
+    for meal in order.meals.all():
+        order.meals.remove(meal)
+    for allergy in order.allergies.all():
+        order.allergies.remove(allergy)
     for meal in selected_meals:
         order.meals.add(meal)
     for allergy in selected_allergies:
