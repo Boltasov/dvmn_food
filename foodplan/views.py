@@ -69,6 +69,10 @@ def order_confirmation(request):
     order.peoples_amount = persons_count
     order.price = cost
     order.save()
+    for meal in order.meals.all():
+        order.meals.remove(meal)
+    for allergy in order.allergies.all():
+        order.allergies.remove(allergy)
     for meal in selected_meals:
         order.meals.add(meal)
     for allergy in selected_allergies:
@@ -83,7 +87,7 @@ def order_confirmation(request):
         'persons_count': persons_count,
     })
 
-<<<<<<< Updated upstream
+
 def promo_card(request):
     dish = Dish.objects.filter(promo=True).order_by('?').first()
     dish_ingredients = dish.dishingredient_set.all()
@@ -92,10 +96,3 @@ def promo_card(request):
         'dish_ingredients': dish_ingredients,
     }
     return render(request, 'promo_card.html', context)
-=======
-
-def profile(request):
-    if request.user.is_authenticated == False:
-        return redirect('account:login')
-    return render(request, 'lk.html', {})
->>>>>>> Stashed changes
