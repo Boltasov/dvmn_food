@@ -6,7 +6,12 @@
 {% endblock title %}
 
 {% block header_btn %}
-  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
+    {% if user.is_authenticated %}
+        <p>Привет, {{ user.username }}!</p>
+        <button class="btn btn-outline-success shadow-none foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:logout' %}'">Выйти</button>
+    {% else %}
+        <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
+    {% endif %}
 {% endblock %}
 
 {% block content %}
