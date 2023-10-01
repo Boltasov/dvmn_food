@@ -108,10 +108,13 @@ def create_menu(request):
     user = request.user
     order_id = request.session.get('order_id')
     current_date = date.today()
+    start_date = current_date
+    print(current_date)
     order = Subscription.objects.get(id=order_id)
+    end_date = current_date + relativedelta(months=order.months_amount)
+    print(end_date)
     recommendations = Recommendation.objects.filter(subscription_id=order_id)
     if not recommendations.exists():
-        end_date = current_date + relativedelta(months=order.months_amount)
         dishes = Dish.objects.filter(menu_type=order.menu_type)
         for allergy in order.allergies.all():
             dishes = dishes.exclude(ingredients__allergy=allergy)
@@ -125,9 +128,9 @@ def create_menu(request):
                     recommendation = Recommendation(user=user, dish=selected_dish, date=current_date, subscription_id=order_id)
                     recommendation.save()
             current_date += timedelta(days=1)
-        order.start_date = current_date
-        order.end_date = end_date
-        order.save()
+    order.start_date = start_date
+    order.end_date = end_date
+    order.save()
     context = {
         'menu_type': order.menu_type,
     }
