@@ -6,12 +6,20 @@
 {% endblock title %}
 
 {% block header_btn %}
-  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
+      {% if request.user.is_authenticated %}
+        <li class="nav-item align-items-center d-md-flex flex-grow-1 justify-content-end">
+          <button class="btn btn-outline-success me-2 shadow-none foodplan_green foodplan__border_green" onclick="location.href='{% url 'profile' %}'">Личный кабинет</button>
+          <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:logout' %}'">Выйти</button>
+        </li>
+      {% else %}
+        <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:login' %}'">Войти</button>
+      {% endif %}
+
 {% endblock %}
 
 {% block content %}
 <main style="margin-top: calc(2rem + 85px);">
-    <section class="foodplan__head_bg" style="background-image: url({% static 'img/head-bg.png' %});">
+    <section class="foodplan__head_bg">
         <div class="container">
             <div class="d-flex w-50 py-lg-5 foodplan__head">
                 <div class="d-flex flex-column justify-content-start foodplan__head_desc">
@@ -21,6 +29,7 @@
                         Больше не нужно думать, что готовить.</h4>
                     <div class="d-block mt-3">
                         <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url "order" %}'">Хочу попробовать</button>
+                        <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url "promo_card" %}'">Пробный рецепт</button>
                     </div>
                 </div>
             </div>
