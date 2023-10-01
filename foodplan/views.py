@@ -1,8 +1,12 @@
 from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect
 from django.db.models import Model
+import random
+from datetime import date, timedelta
+from dateutil.relativedelta import relativedelta
 
-from .models import MenuType, Allergy, Meal, Subscription, Dish
+
+from .models import MenuType, Allergy, Meal, Subscription, Dish, Recommendation
 
 
 def calculate_cost(meals, term):
@@ -78,6 +82,9 @@ def order_confirmation(request):
     for allergy in selected_allergies:
         order.allergies.add(allergy)
     order.save()
+    request.session['order_id'] = order.id
+    for meal in order.meals.all():
+        print(meal)
     return render(request, 'order_confirmation.html', {
         'menu': selected_menu,
         'term': term,
@@ -87,7 +94,6 @@ def order_confirmation(request):
         'persons_count': persons_count,
     })
 
-
 def promo_card(request):
     dish = Dish.objects.filter(promo=True).order_by('?').first()
     dish_ingredients = dish.dishingredient_set.all()
@@ -96,3 +102,34 @@ def promo_card(request):
         'dish_ingredients': dish_ingredients,
     }
     return render(request, 'promo_card.html', context)
+
+
+def create_menu(request):
+    user = request.user
+    order_id = request.session.get('order_id')
+    current_date = date.today()
+    order = Subscription.objects.get(id=order_id)
+    recommendations = Recommendation.objects.filter(subscription_id=order_id)
+    if not recommendations.exists():
+        end_date = current_date + relativedelta(months=order.months_amount)
+        dishes = Dish.objects.filter(menu_type=order.menu_type)
+        for allergy in order.allergies.all():
+            dishes = dishes.exclude(ingredients__allergy=allergy)
+
+        while current_date <= end_date:
+            for meal in Meal.objects.all():
+                available_dishes = dishes.filter(meal=meal)
+                if available_dishes.exists():
+                    selected_dish = random.choice(available_dishes)
+
+                    recommendation = Recommendation(user=user, dish=selected_dish, date=current_date, subscription_id=order_id)
+                    recommendation.save()
+            current_date += timedelta(days=1)
+        order.start_date = current_date
+        order.end_date = end_date
+        order.save()
+    context = {
+        'menu_type': order.menu_type,
+    }
+    return render(request, 'menu_created.html', context)
+

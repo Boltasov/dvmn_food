@@ -199,12 +199,18 @@ class Recommendation(models.Model):
         verbose_name='Дата рекомендации',
     )
 
+    subscription_id = models.IntegerField(
+        verbose_name='ID подписки',
+        blank=True,
+        null=True,
+    )
+
     def __str__(self):
         return f'{self.user} - {self.date}: {self.dish}'
 
     class Meta:
-        verbose_name = 'Рекомендованное блюдо'
-        verbose_name_plural = 'Рекомендованные блюда'
+        verbose_name = 'Рекомендация'
+        verbose_name_plural = 'Рекомендации'
 
 
 class PromoCode(models.Model):
