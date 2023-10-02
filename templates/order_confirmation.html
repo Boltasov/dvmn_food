@@ -28,7 +28,7 @@
                         <b>Стоимость: {{ cost }} р.</b>
                     </p>
                 <div class="d-block mt-3">
-                    <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'menu_created' %}'">Оплатить</button>
+                    <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'payment_redirect' %}'">Оплатить</button>
                 </div>
               {% else %}
                 <h5>Вы не выбрали предпочитаемый тип меню</h5>
