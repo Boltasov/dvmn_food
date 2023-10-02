@@ -23,7 +23,7 @@
     <section>
         <div class="container">
             <div class="card p-3 mb-5 foodplan__shadow">
-                <a href="#" class="link-secondary fw-light foodplan__backButton">
+                <a href="{% url "index" %}" class="link-secondary fw-light foodplan__backButton">
                     <svg xmlns="http://www.w3.org/2000/svg" width="9%" height="9%" fill="currentColor" class="bi bi-arrow-left-circle"
                         viewBox="0 0 16 16">
                         <path fill-rule="evenodd"
@@ -33,7 +33,7 @@
                 <h2 class="text-center"><strong>Авторизация</strong></h2>
             </div>
             <div class="card px-5 py-3 d-flex align-items-center foodplan__shadow">
-                <form action="{% url "account:login" %}" method="post">
+                <form method="post">
                   {% csrf_token %}
                     <h1 class="mb-4 text-center"><strong>Вход</strong></h1>
                     <div class="mb-3">
@@ -46,7 +46,7 @@
                           <small><a href="#" class="link-dark foodplan_green">Забыли пароль?</a></small>
                       </div>
                       <p>{{ form.password|add_class:"form-control" }}
-                    </div>
+                    </div> 
                     <div class="row mb-3">
                         <div class="col-12 col-sm-6 mt-3">
                             <button type="submit"

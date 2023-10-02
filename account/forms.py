@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import Profile
+
 
 class UserRegistrationForm(forms.ModelForm):
     password = forms.CharField(label='Пароль',
@@ -17,3 +19,19 @@ class UserRegistrationForm(forms.ModelForm):
         if cd['password'] != cd['password2']:
             raise forms.ValidationError('Password don\'t match.')
         return cd['password2']
+
+
+class UserEditForm(UserRegistrationForm):
+    email = forms.EmailField(label='E-mail',
+                             widget=forms.EmailInput)
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+
+
+class ProfileEditForm(forms.ModelForm):
+    photo = forms.ImageField(widget=forms.FileInput)
+
+    class Meta:
+        model = Profile
+        fields = ['photo']
