@@ -1,9 +1,15 @@
 from decimal import Decimal
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.db.models import Model
 import random
 from datetime import date, timedelta
 from dateutil.relativedelta import relativedelta
+
+import os
+import uuid
+from dotenv import load_dotenv
+from yookassa import Configuration, Payment
+from django.urls import reverse
 
 
 from .models import MenuType, Allergy, Meal, Subscription, Dish, Recommendation
@@ -83,6 +89,7 @@ def order_confirmation(request):
         order.allergies.add(allergy)
     order.save()
     request.session['order_id'] = order.id
+    request.session['price'] = order.price
     for meal in order.meals.all():
         print(meal)
     return render(request, 'order_confirmation.html', {
@@ -136,3 +143,34 @@ def create_menu(request):
     }
     return render(request, 'menu_created.html', context)
 
+
+def payment_redirect(request):
+    load_dotenv()
+    account_id = os.getenv('YMONEY_ACCOUNT_ID')
+    secret_key = os.getenv('YMONEY_SECRET_KEY')
+    Configuration.configure(account_id, secret_key)
+
+    price = request.session.get('price')
+
+    idempotence_key = str(uuid.uuid4())
+    return_url = request.build_absolute_uri(reverse('menu_created'))
+    print('Redirect url: ', return_url)
+
+    payment = Payment.create({
+        "amount": {
+            "value": price,
+            "currency": "RUB"
+        },
+        "payment_method_data": {
+            "type": "bank_card"
+        },
+        "confirmation": {
+            "type": "redirect",
+            "return_url": return_url
+        },
+        "description": 'Подписка на рецепты от dvmn'
+    }, idempotence_key)
+
+    confirmation_url = payment.confirmation.confirmation_url
+
+    return HttpResponseRedirect(confirmation_url)
