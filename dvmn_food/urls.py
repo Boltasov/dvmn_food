@@ -6,8 +6,8 @@ from django.conf import settings
 from foodplan import views
 
 urlpatterns = [
-    path('accounts/', include('account.urls')),
     path('admin/', admin.site.urls),
+    path('accounts/', include('account.urls')),
     path('', views.index, name='index'),
     path('order/', views.order, name='order'),
     path('promo_card/', views.promo_card, name='promo_card'),
