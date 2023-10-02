@@ -129,7 +129,7 @@ def create_menu(request):
             dishes = dishes.exclude(ingredients__allergy=allergy)
 
         while current_date <= end_date:
-            for meal in Meal.objects.all():
+            for meal in order.meals.all():
                 available_dishes = dishes.filter(meal=meal)
                 if available_dishes.exists():
                     selected_dish = random.choice(available_dishes)
