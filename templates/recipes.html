@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+План питания на неделю, меню, рецепты, список покупок. Классическое меню, безуглеводное меню
+{% endblock title %}
+
+{% block header_btn %}
+  <button class="btn shadow-none btn-outline-success foodplan_green foodplan__border_green" onclick="location.href='{% url 'account:profile' %}'">Назад</button>
+{% endblock %}
+
+
+{% block content %}
+<main style="margin-top: calc(2rem + 85px);">
+    <section>
+        <div class="container">
+            {% for item in dishes %}
+            <div class="row margin_bottom">
+                <h2 class="text-center my-4">{{ item.dish.meal }}</h2>
+                <div class="col-12 col-md-4 d-flex justify-content-center">
+                    <div class="card foodplan__card_borderless">
+                        <img src="{{item.dish.image.url}}" alt="">
+                    </div>
+                </div>
+                <div class="col-12 col-md-8 d-flex flex-column justify-content-between">
+                    <div class="row">
+                        <h2>{{ item.dish.name }}</h2>
+                        <div class="col-12 col-sm-6 d-flex flex-column justify-content-between">
+                            <h6>{{ item.dish.description }}</h6>
+                            <h6>{{ item.dish.preparation }}</h6>
+                        </div>
+                        <div class="col-12 col-sm-6">
+                            <small class="link-secondary">ингредиенты:</small>
+                            <ul class="list-group list-group-flush">
+                                {% for ingredient in item.ingredients %}
+                                    <li class="list-group-item disabled">
+                                        <small>
+                                            {{ingredient.ingredient.name}} (
+                                            {% if ingredient.amount%}
+                                                {{ingredient.amount}}
+                                            {% endif%}
+                                            {{ingredient.get_measurement_display}})
+                                        </small>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <small class="link-secondary">общая калорийность: {{ item.dish.caloricity }} ккал</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            {% for ingredient in all_ingredients %}
+            <p>{{ ingredient.ingredient }}: {{ ingredient.amount }} {{ ingredient.measurement }}</p>
+            {% endfor %}
+        </div>
+    </section>
+</main>
+{% endblock content %}

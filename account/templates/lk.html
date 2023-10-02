@@ -125,13 +125,18 @@
                                             </div>
                                             <div class="row" style="padding-top: 30px; padding-bottom: 40px;">
                                               {% for day in menu.week %}
-                                                <div class="col-sm">
-                                                  <a href="#">
+                                                <div class="col-sm margin_bottom">
+                                                  <a class="recipes_link" href="{% url 'get_recipes' menu_id=menu.id date=day.date|date:'d-m-Y' %}">
                                                     {{ day.day }}<br>
                                                     {{ day.date|date:"d.m.Y" }}
                                                   </a>
                                                 </div>
                                               {% endfor %}
+                                                <div class="col-sm">
+                                                  <a href="{% url 'get_ingredients' menu_id=menu.id date=menu.last_date|date:'d-m-Y' %}">
+                                                    Ингредиенты
+                                                  </a>
+                                                </div>
                                             </div>
                                         </div>
                                       {% endfor %}

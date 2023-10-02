@@ -9,6 +9,21 @@ body {
     grid-template-rows: auto 1fr auto;
 }
 
+.recipes_link {
+    text-decoration: none;
+    color: #91B93E;
+}
+
+.margin_bottom {
+    margin-bottom: 30px;
+}
+
+.user_info {
+    margin-right: 10px;
+    margin-top: 18px;
+    color: #91B93E;
+}
+
 .foodplan__bg_grey {
     background-color: #F5F5F5;
 }

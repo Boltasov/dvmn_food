@@ -2,8 +2,10 @@ from decimal import Decimal
 from django.shortcuts import render, get_object_or_404, redirect, HttpResponseRedirect
 from django.db.models import Model
 import random
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+from decimal import Decimal
 
 import os
 import uuid
@@ -174,3 +176,54 @@ def payment_redirect(request):
     confirmation_url = payment.confirmation.confirmation_url
 
     return HttpResponseRedirect(confirmation_url)
+
+
+def get_recipes(request, menu_id, date):
+    date_object = datetime.strptime(date, '%d-%m-%Y')
+    user = request.user
+    recommendations = Recommendation.objects.filter(
+        user=user,
+        date=date_object,
+        subscription_id=menu_id
+    )
+    dishes_with_ingredients = []
+    for recommendation in recommendations:
+        dish = recommendation.dish
+        dish_ingredients = dish.dishingredient_set.all()
+        dishes_with_ingredients.append({
+            'dish': dish,
+            'ingredients': dish_ingredients
+        })
+    context = {
+        'dishes': dishes_with_ingredients,
+    }
+
+    return render(request, 'recipes.html', context)
+
+def get_ingredients(request, menu_id, date):
+    date_object = datetime.strptime(date, '%d-%m-%Y').date()
+    current_date = datetime.now().date()
+    user = request.user
+    recommendations = Recommendation.objects.filter(
+        user=user,
+        subscription_id=menu_id,
+        date__range=(current_date, date_object)
+    )
+    all_ingredients = defaultdict(Decimal)
+    for recommendation in recommendations:
+        dish = recommendation.dish
+        dish_ingredients = dish.dishingredient_set.all()
+        for di in dish_ingredients:
+            key = (di.ingredient, di.get_measurement_display())
+            all_ingredients[key] += di.amount if di.amount else Decimal(0)
+    context = {
+        'all_ingredients': [
+            {
+                'ingredient': key[0],
+                'measurement': key[1],
+                'amount': value
+            }
+            for key, value in all_ingredients.items()
+        ],
+    }
+    return render(request, 'ingredients.html', context)

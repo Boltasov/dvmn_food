@@ -49,6 +49,7 @@ def profile_view(request):
     menues = []
     for subscription in active_subscripts:
         menu = {}
+        menu['id'] = subscription.id
         menu['menu'] = subscription.menu_type
         menu['persons'] = subscription.peoples_amount
         menu['allergies'] = subscription.allergies.all()
@@ -56,6 +57,7 @@ def profile_view(request):
         menu['start_date'] = subscription.start_date
         menu['end_date'] = subscription.end_date
         menu['week'] = fetch_weekdays(request.user, subscription.pk)
+        menu['last_date'] = menu['week'].last()['date']
         menues.append(menu)
     
     return render(request, 'lk.html', {'menues': menues,
